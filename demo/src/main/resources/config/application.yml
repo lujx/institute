@@ -1,0 +1,45 @@
+#1.spring boot项目中同时存在application.properties和application.yml文件时，两个文件都有效，但是application.properties的优先级会比application.yml高
+#2.优先级 /config/application.properties
+#          -> /application.properties
+#               -> /src/main/resource/config/application.properties
+#                    -> /src/main/resource/application.properties
+
+#端口
+server:
+  port: 8001
+
+
+#启用调试日志
+#debug: true
+
+
+
+
+
+#开发配置
+spring:
+  profiles:
+    #可以配置若干个配置文件，用spring.profiles.active激活--dev. test.
+    active: dev
+
+  #数据源
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo?serverTimezone=GMT+8&useSSL=false
+    username: root
+    password: Brihgt6
+
+  banner:
+    location: classpath:static/banner/banner.txt
+
+
+#公共配置与profiles选择无关
+#mybatis:
+  #定义别名
+  #typeAliasesPackage: com.darkbright.demo.domain.entity
+  #mapperLocations: classpath*:com/darkbright/demo/permission/mapper/*.xml
+  #configuration:
+    #mapUnderscoreToCamelCase: true
+    #cacheEnabled: false
+
+
