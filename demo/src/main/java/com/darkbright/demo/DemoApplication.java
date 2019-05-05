@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @ ComponentScan             扫描bean，路径为Application类所在package以及package下的子路径，在spring boot中bean都放置在该路径以及子路径下<br/>
  */
 @SpringBootApplication
-@MapperScan
 public class DemoApplication {
 
   public static void main(String[] args) {
