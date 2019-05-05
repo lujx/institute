@@ -25,11 +25,12 @@
     </properties>
 
     <dependencies>
+        <!-- starter entrance -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+        <!--单元测试依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -38,6 +39,7 @@
     </dependencies>
 
     <build>
+        <!--构建jar包的插件-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

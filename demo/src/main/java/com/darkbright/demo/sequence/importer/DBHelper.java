@@ -1,8 +1,6 @@
-package com.darkbright.demo.importsequence;
+package com.darkbright.demo.sequence.importer;
 
 import com.darkbright.demo.domain.entity.Gene;
-import org.apache.ibatis.jdbc.SQL;
-
 import java.sql.*;
 
 /**
