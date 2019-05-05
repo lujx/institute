@@ -20,7 +20,7 @@ spring:
 
   #数据源
   datasource:
-    url: jdbc:mysql://47.100.213.205:3306/test?serverTimezone=GMT+8&useSSL=false
+    url: jdbc:mysql://47.100.213.205:3306/test?&useSSL=false
     username: root
     password: Mydb6.
 
@@ -35,7 +35,7 @@ mybatis:
   #如果Mapper.xml与Mapper.class在同一个包下且同名，spring扫描Mapper.class的同时会自动扫描同名的Mapper.xml并装配到Mapper.class。
   #如果Mapper.xml与Mapper.class不在同一个包下或者不同名，就必须使用配置mapperLocations指定mapper.xml的位置。
   #此时spring是通过识别mapper.xml中的 <mapper namespace="com.fan.mapper.UserDao"> namespace的值来确定对应的Mapper.class的。
-  mapperLocations: classpath:com/darkbright/demo/**/mapper/*.xml
+  mapperLocations: classpath:mapper/**/*.xml
   configuration:
     mapUnderscoreToCamelCase: true
     cacheEnabled: false

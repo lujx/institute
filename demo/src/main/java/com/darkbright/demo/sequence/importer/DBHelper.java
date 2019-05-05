@@ -1,6 +1,7 @@
 package com.darkbright.demo.sequence.importer;
 
 import com.darkbright.demo.domain.entity.Gene;
+
 import java.sql.*;
 
 /**

@@ -4,7 +4,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 /**
@@ -24,6 +23,7 @@ public class ExcelHelper {
       FileOutputStream fileStream = new FileOutputStream(FILE_BASE + "new_excel.xlsx");
       wb.write(fileStream);
       fileStream.close();
+
     } catch (Exception e) {
       e.printStackTrace();
     }

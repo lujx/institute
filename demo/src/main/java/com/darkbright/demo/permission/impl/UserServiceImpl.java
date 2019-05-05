@@ -1,8 +1,8 @@
 package com.darkbright.demo.permission.impl;
 
 import com.darkbright.demo.domain.entity.User;
-import com.darkbright.demo.permission.dao.UserRepository;
 import com.darkbright.demo.permission.UserService;
+import com.darkbright.demo.permission.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +14,17 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class UserServiceImpl implements UserService {
-  /*private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
   @Autowired
   public UserServiceImpl(UserRepository userRepository) {
     this.userRepository = userRepository;
-  }*/
+  }
 
 
   @Override
   public User get(int id) {
-    //return userRepository.get(id);
-    return new User("bright","1");
+    return userRepository.get(id);
+    //return new User("bright","1");
   }
 }

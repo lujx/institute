@@ -1,8 +1,8 @@
 package com.darkbright.demo.util;
 
-import com.darkbright.demo.domain.entity.Gene;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * description here.
@@ -41,65 +41,6 @@ public class DBHelper {
       e.printStackTrace();
     }
     return conn;
-  }
-
-  public static int insert(String tableName, Connection conn, Gene gene) {
-    PreparedStatement psql;
-    int result = 0;
-    //预处理添加数据，其中有两个参数--“？”
-    try {
-      psql = conn.prepareStatement("insert into " + tableName + " (id, kingdom, phylum, class, `order`, family, genus, species, sequence) "
-          + "values(?,?,?,?,?,?,?,?,?)");
-      psql.setString(1, gene.getId());
-      psql.setString(2, gene.getKingdom());
-      psql.setString(3, gene.getPhylum());
-      psql.setString(4, gene.getB_class());
-      psql.setString(5, gene.getOrder());
-      psql.setString(6, gene.getFamily());
-      psql.setString(7, gene.getGenus());
-      psql.setString(8, gene.getSpecies());
-      psql.setString(9, gene.getSequence());
-
-      result = psql.executeUpdate();
-
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return result;
-  }
-
-  public static void select(String tableName) {
-    Connection conn = getConn();
-    //2.创建statement类对象，用来执行SQL语句！！
-    try {
-
-      Statement statement = conn.createStatement();
-      //要执行的SQL语句
-      String sql = "select * from " + tableName;
-
-      //3.ResultSet类，用来存放获取的结果集！！
-      ResultSet rs = statement.executeQuery(sql);
-
-      Gene gene = new Gene();
-      while (rs.next()) {
-        gene.setId(rs.getString("id"));
-        gene.setKingdom(rs.getString("kingdom"));
-        gene.setPhylum(rs.getString("phylum"));
-        gene.setB_class(rs.getString("class"));
-        gene.setOrder(rs.getString("order"));
-        gene.setFamily(rs.getString("family"));
-        gene.setGenus(rs.getString("genus"));
-        gene.setSpecies(rs.getString("species"));
-        gene.setSequence(rs.getString("sequence"));
-
-        //输出结果
-        System.out.println(gene.toString());
-      }
-
-      rs.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
   }
 
 }
