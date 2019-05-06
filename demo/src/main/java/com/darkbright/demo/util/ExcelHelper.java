@@ -1,11 +1,21 @@
 package com.darkbright.demo.util;
 
+import com.darkbright.demo.domain.entity.Equipment;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Excel处理器.<br/>
@@ -19,6 +29,10 @@ import java.io.*;
  * @date 2019-05-05 17:20
  **/
 public class ExcelHelper {
+
+  private final Logger log = LoggerFactory.getLogger(ExcelHelper.class);
+
+  private String I_FILE_BASE = "/Users/leo/Documents/temp/";
 
   private String FILE_BASE = "d:" + File.separator + "workspaces" + File.separator + "test_zone" + File.separator;
 
@@ -93,20 +107,46 @@ public class ExcelHelper {
 
   //region 读取Excel
 
-  public void readExcel(String filename){
+  public void readExcel(File file) {
     try {
       //读取文件流
-      InputStream in = new FileInputStream(filename);
+      //InputStream in = new FileInputStream(file);
       //把文件流转换成POI文件系统
-      POIFSFileSystem fs = new POIFSFileSystem(in);
-      XSSFWorkbook workbook = new XSSFWorkbook(fs);
+      //POIFSFileSystem fs = new POIFSFileSystem(in);
+      //生成XSSFWorkbook对象
+      XSSFWorkbook workbook = new XSSFWorkbook(file);
+
+      XSSFSheet sheet = workbook.getSheetAt(0);
+
+
+      List<Equipment> equipments = new ArrayList<>();
+
+      for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+        Equipment equipment = new Equipment();
+        XSSFRow row = sheet.getRow(i);
+        equipment.setId(Integer.parseInt(row.getCell(0).getRawValue()));
+        equipment.setName(row.getCell(1).getStringCellValue());
+        equipment.setType(row.getCell(2).getStringCellValue());
+        equipment.setPrice(Double.valueOf(row.getCell(3).getRawValue()));
+        equipment.setNumber(Integer.parseInt(row.getCell(4).getRawValue()));
+        equipment.setTotal(Double.valueOf(row.getCell(5).getRawValue()));
+        equipment.setStorageArea(row.getCell(6).getStringCellValue());
+        equipment.setRemark(row.getCell(7).getStringCellValue());
+
+        equipments.add(equipment);
+      }
+
+      for (Equipment equipment : equipments) {
+        log.debug(equipment.toString());
+
+      }
+
 
     } catch (Exception e) {
       e.printStackTrace();
     }
 
   }
-
 
 
   //endregion
@@ -117,7 +157,7 @@ public class ExcelHelper {
    * 3.创建行Row
    * 4.创建单元格Cell
    */
-  public void createHandler(){
+  public void createHandler() {
     ExcelHelper excelHelper = new ExcelHelper();
 
     String fileName = "new_excel.xlsx";
@@ -134,7 +174,12 @@ public class ExcelHelper {
     excelHelper.createExcel(xlsxWorkbook, fileName);
   }
 
-  public void readHandler(){
+  public void readHandler() {
+    ExcelHelper excelHelper = new ExcelHelper();
+    File file = new File(I_FILE_BASE + "机械科学与工程学院-设备购置清单（2016）.xlsx");
+
+    excelHelper.readExcel(file);
+
 
   }
 
@@ -143,7 +188,7 @@ public class ExcelHelper {
     ExcelHelper excelHelper = new ExcelHelper();
     //excelHelper.createHandler();
 
-
+    excelHelper.readHandler();
   }
 
 }
