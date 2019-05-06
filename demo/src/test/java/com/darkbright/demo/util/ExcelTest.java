@@ -1,5 +1,8 @@
 package com.darkbright.demo.util;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+
 /**
  * description here.
  *
@@ -11,8 +14,12 @@ public class ExcelTest {
 
   public static void main(String[] args) {
     ExcelHelper excelHelper = new ExcelHelper();
+    String fileName = "new_excel.xlsx";
 
-    excelHelper.createExcel();
+    //2007之前的excel
+    Workbook wb = new HSSFWorkbook();
+
+    excelHelper.createExcel(wb, fileName);
 
   }
 
