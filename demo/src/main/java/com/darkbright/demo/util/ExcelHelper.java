@@ -2,10 +2,8 @@ package com.darkbright.demo.util;
 
 import com.darkbright.demo.domain.entity.Equipment;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -30,7 +28,7 @@ import java.util.List;
  **/
 public class ExcelHelper {
 
-  private final Logger log = LoggerFactory.getLogger(ExcelHelper.class);
+  private final static Logger log = LoggerFactory.getLogger(ExcelHelper.class);
 
   private String I_FILE_BASE = "/Users/leo/Documents/temp/";
 
@@ -118,6 +116,8 @@ public class ExcelHelper {
 
       XSSFSheet sheet = workbook.getSheetAt(0);
 
+      Cell cell = sheet.getRow(0).getCell(1);
+      cell.getCellType();
 
       List<Equipment> equipments = new ArrayList<>();
 
@@ -176,7 +176,10 @@ public class ExcelHelper {
 
   public void readHandler() {
     ExcelHelper excelHelper = new ExcelHelper();
-    File file = new File(I_FILE_BASE + "机械科学与工程学院-设备购置清单（2016）.xlsx");
+
+    String file_base = System.getProperty("os.name").indexOf("Windows") != 0 ? I_FILE_BASE : FILE_BASE;
+
+    File file = new File(file_base + "机械科学与工程学院-设备购置清单（2016）.xlsx");
 
     excelHelper.readExcel(file);
 
@@ -189,6 +192,8 @@ public class ExcelHelper {
     //excelHelper.createHandler();
 
     excelHelper.readHandler();
+
+    //log.debug(System.getProperty("os.name") + System.getProperty("os.arch") + System.getProperty("os.version"));
   }
 
 }

@@ -62,6 +62,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+
 
         <!--POI POI提供API给Java程序对Microsoft Office格式档案读和写的功能-->
         <dependency>
