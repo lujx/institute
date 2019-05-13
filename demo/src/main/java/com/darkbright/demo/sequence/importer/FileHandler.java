@@ -10,7 +10,7 @@ import java.io.*;
  **/
 public class FileHandler {
 
-  private static final String TABLE_NAME = "matk";
+  private static final String TABLE_NAME = "trnl";
   /**
    * Taxonomy分类位置, 0:domain; 1:kingdom; 2:phylum; 10:class; 13:order; 15:family; 23:genus; 24:species
    * <p>
@@ -139,12 +139,13 @@ public class FileHandler {
     origin = origin.replace("\'", "\\'");
     //把25个taxonomy分开
     String[] singleTaxonomy = origin.split("_");
-    gene.setKingdom(singleTaxonomy[INDEXES[0]]);
-    gene.setPhylum(singleTaxonomy[INDEXES[1]]);
-    gene.setB_class(singleTaxonomy[INDEXES[2]]);
-    gene.setOrder(singleTaxonomy[INDEXES[3]]);
-    gene.setFamily(singleTaxonomy[INDEXES[4]]);
-    gene.setGenus(singleTaxonomy[INDEXES[5]]);
-    gene.setSpecies(singleTaxonomy[INDEXES[6]]);
+    gene.setDomain(singleTaxonomy[INDEXES[0]]);
+    gene.setKingdom(singleTaxonomy[INDEXES[1]]);
+    gene.setPhylum(singleTaxonomy[INDEXES[2]]);
+    gene.setB_class(singleTaxonomy[INDEXES[3]]);
+    gene.setOrder(singleTaxonomy[INDEXES[4]]);
+    gene.setFamily(singleTaxonomy[INDEXES[5]]);
+    gene.setGenus(singleTaxonomy[INDEXES[6]]);
+    gene.setSpecies(singleTaxonomy[INDEXES[7]]);
   }
 }

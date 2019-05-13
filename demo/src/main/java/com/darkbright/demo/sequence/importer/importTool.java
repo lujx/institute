@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class importTool {
   private static FileHandler fileHandler = new FileHandler();
 
-  private static String DATABASE="matk";
+  private static String DATABASE="trnl";
 
   private static String[] readFile() {
     String fileName = "id_zhushi_xulie."+DATABASE;
@@ -30,9 +30,8 @@ public class importTool {
 
       //Windows下处理换行符
       fileContext = fileContext.replace("\r", "");
-      String[] fileRows = fileContext.split("\n");
 
-      return fileRows;
+      return fileContext.split("\n");
     } catch (IOException e) {
       e.printStackTrace();
     }

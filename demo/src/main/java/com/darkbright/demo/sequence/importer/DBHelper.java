@@ -47,17 +47,18 @@ public class DBHelper {
     int result = 0;
     //预处理添加数据，其中有两个参数--“？”
     try {
-      psql = conn.prepareStatement("insert into " + tableName + " (id, kingdom, phylum, class, `order`, family, genus, species, sequence) "
-          + "values(?,?,?,?,?,?,?,?,?)");
+      psql = conn.prepareStatement("insert into " + tableName + " (id, domain ,kingdom, phylum, class, `order`, family, genus, species, sequence) "
+          + "values(?,?,?,?,?,?,?,?,?,?)");
       psql.setString(1, gene.getId());
-      psql.setString(2, gene.getKingdom());
-      psql.setString(3, gene.getPhylum());
-      psql.setString(4, gene.getB_class());
-      psql.setString(5, gene.getOrder());
-      psql.setString(6, gene.getFamily());
-      psql.setString(7, gene.getGenus());
-      psql.setString(8, gene.getSpecies());
-      psql.setString(9, gene.getSequence());
+      psql.setString(2, gene.getDomain());
+      psql.setString(3, gene.getKingdom());
+      psql.setString(4, gene.getPhylum());
+      psql.setString(5, gene.getB_class());
+      psql.setString(6, gene.getOrder());
+      psql.setString(7, gene.getFamily());
+      psql.setString(8, gene.getGenus());
+      psql.setString(9, gene.getSpecies());
+      psql.setString(10, gene.getSequence());
 
       result = psql.executeUpdate();
 
