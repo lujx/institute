@@ -1,6 +1,5 @@
 package com.darkbright.demo;
 
-import com.darkbright.demo.domain.entity.User;
 import com.darkbright.demo.permission.dao.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,8 +20,9 @@ public class DemoApplicationTests {
 
     @Test
     public void contextLoads() {
-        User user = userRepository.get(1);
-        logger.info(user.toString());
+//        User user = userRepository.get(1);
+//        logger.info(user.toString());
+
     }
     
 }
