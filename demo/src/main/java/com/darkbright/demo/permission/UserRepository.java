@@ -1,4 +1,4 @@
-package com.darkbright.demo.permission.dao;
+package com.darkbright.demo.permission;
 
 import com.darkbright.demo.domain.entity.User;
 import org.apache.ibatis.annotations.Mapper;

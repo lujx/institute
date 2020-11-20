@@ -1,0 +1,11 @@
+/* main style */
+a:hover{
+    text-decoration:none;
+}
+
+
+/* index.jsp */
+.border {
+    border: 1px solid #efefef;
+    border-radius: 5px;
+}

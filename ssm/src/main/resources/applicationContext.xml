@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--===========
+
+    spring配置文件
+        主要配置和业务逻辑相关内容。
+        配置文件的根元素是beans，每个组件使用bean元素来定义，bean元素可以有许多属性，其中有两个是必须的：id和class。id表示组件的默认名称，class表示组件的类型。
+        依赖注入的方式，在sqlsession处举例：
+            constructor-arg：通过构造函数注入。
+                使用constructor-arg标签的index属性，对应于构造函数的多个参数，index属性的值从0开始。
+                使用constructor-arg的type属性，避免构造参数数目相同，类型不同产生的冲突，如Constructor(String arg)、Constructor(int arg)。
+            property：通过setxx方法注入。
+                注入集合属性，使用list,map,set和props标签，分别对应List,Map,Set和Properties
+
+    核心点：数据源、与MyBatis整合、事务控制
+    1、扫描装载除了Controller以外的包
+    2、配置数据源
+    3、配置MyBatis的sqlsession工厂
+    4、配置自动扫描MyBatis映射文件和接口的包
+    5、配置事务管理器
+    6、开启注解进行事务管理
+    7、配置事务控制细节
+    ===========-->
+
+    <!--扫描除了Controller以外的-->
+    <context:component-scan base-package="com.darkbright.frameworks">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--=====================数据源=====================-->
+    <!-- 引入jdbc配置文件 -->
+    <!--传统方式引入配置文件-->
+    <!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:jdbc.properties"/>
+    </bean>-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--配置数据连接池-->
+    <!-- 一、本地数据源 -->
+    <bean id="mysqlPoolDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${mysql.driver}"/>
+        <property name="url" value="${mysql.url}"/>
+        <property name="username" value="${mysql.username}"/>
+        <property name="password" value="${mysql.passwd}"/>
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${initialSize}"/>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${maxActive}"/>
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${maxIdle}"/>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${minIdle}"/>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${maxWait}"/>
+        <!-- 连接验证 -->
+        <property name="validationQuery" value="${validationQuery}"/>
+        <!-- 测试连接是否被空闲 -->
+        <property name="testWhileIdle" value="${testWhileIdle}"/>
+        <!-- 借出连接时不要测试 -->
+        <property name="testOnBorrow" value="${testOnBorrow}"/>
+        <!-- 间隔一段时间运行一次空闲连接回收器 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"/>
+        <!-- 回收空闲连接 -->
+        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"/>
+    </bean>
+    <!-- 二、阿里云数据源 -->
+    <bean id="cloudMysqlPoolDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${cloudmysql.driver}"/>
+        <property name="url" value="${cloudmysql.url}"/>
+        <property name="username" value="${cloudmysql.username}"/>
+        <property name="password" value="${cloudmysql.passwd}"/>
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${initialSize}"/>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${maxActive}"/>
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${maxIdle}"/>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${minIdle}"/>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${maxWait}"/>
+        <!-- 连接验证 -->
+        <property name="validationQuery" value="${validationQuery}"/>
+        <!-- 测试连接是否被空闲 -->
+        <property name="testWhileIdle" value="${testWhileIdle}"/>
+        <!-- 借出连接时不要测试 -->
+        <property name="testOnBorrow" value="${testOnBorrow}"/>
+        <!-- 间隔一段时间运行一次空闲连接回收器 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"/>
+        <!-- 回收空闲连接 -->
+        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"/>
+    </bean>
+
+    <!--=====================配置与MyBatis整合=====================-->
+    <!-- 配置MyBatis的sqlsession工厂，把数据源注入MyBatis -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="${changejdbc}PoolDataSource"/>
+        <!--指定mybatis配置文件的位置（可以不需要单独配置，单独配置可以把功能分得更清晰而且可以配置更细）-->
+        <property name="configLocation" value="classpath:mybatis.xml"/>
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations" value="classpath:com/darkbright/frameworks/mapper/*.xml"/>
+    </bean>
+
+    <!-- 方式一、SqlSessionTemplate方式 -->
+    <!-- 在会话工厂中取出SqlSessionTemplate这个对象 -->
+    <!--<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>-->
+
+    <!-- 方式二、Mapper注入容器方式 -->
+
+    <!-- 传统配置：逐一把Dao接口添加到IOC容器里 -->
+    <!--<bean id ="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.darkbright.frameworks.dao.UserDao"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>-->
+
+    <!-- 扫描式：配置扫描器，将MyBatis接口实现加入IOC容器中，扫描DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.darkbright.frameworks.dao"/>
+        <!--TODO:这是什么-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--=====================事务控制的配置=====================-->
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--控制住数据源-->
+        <property name="dataSource" ref="${changejdbc}PoolDataSource"/>
+    </bean>
+
+    <!-- 开启注解进行事务管理 -->
+    <tx:annotation-driven/>
+
+    <!--使用基于注解的事务 或 使用xml配置形式的事务(主要使用配置式)-->
+    <aop:config expose-proxy="true">
+        <!-- 只对业务逻辑层实施事物 -->
+        <aop:pointcut id="txPointcut" expression="execution(* com.darkbright.frameworks.service..*(..))"/>
+        <!-- 配置增强配置 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>
+
+    <!--
+        上面用aop切片，切完了用下面的事务配置具体进行处理
+        开启注解事务
+     -->
+    <!--transaction-manager属性默认值transactionManager，如果名字符合可以不写-->
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            <!--所有方法都是事务方法-->
+            <!--<tx:method name="*"/>-->
+            <tx:method name="add*"/>
+            <tx:method name="update*"/>
+            <tx:method name="del*"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="count*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="list*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+</beans>

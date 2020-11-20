@@ -10,7 +10,7 @@ import java.sql.*;
  * @author Leo
  * @date 2019-03-22 15:21
  **/
-public class DBHelper {
+public class DbHelper {
 
   public static Connection getConn() {
     //驱动程序名

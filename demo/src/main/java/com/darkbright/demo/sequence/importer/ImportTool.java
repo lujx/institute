@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * @author Leo
  * @date 2019-04-26 13:10
  **/
-public class importTool {
+public class ImportTool {
   private static FileHandler fileHandler = new FileHandler();
 
   private static String DATABASE="trnl";
@@ -43,13 +43,13 @@ public class importTool {
     Gene gene = new Gene();
     String[] fileRows = readFile();
     int result = 0;
-    Connection conn = DBHelper.getConn();
+    Connection conn = DbHelper.getConn();
 
     for (int i = 1; i < fileRows.length; i++) {
       if (i % 3 == 0) {
         //拼接语句
         fileHandler.spliceGene(fileRows, i, gene);
-        int flag = DBHelper.insert(DATABASE, conn, gene);
+        int flag = DbHelper.insert(DATABASE, conn, gene);
         if (flag == 1) {
           System.out.println("插入成功:" + ++result);
         }

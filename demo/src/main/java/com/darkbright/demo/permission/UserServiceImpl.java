@@ -1,8 +1,8 @@
-package com.darkbright.demo.permission.impl;
+package com.darkbright.demo.permission;
 
 import com.darkbright.demo.domain.entity.User;
 import com.darkbright.demo.permission.UserService;
-import com.darkbright.demo.permission.dao.UserRepository;
+import com.darkbright.demo.permission.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

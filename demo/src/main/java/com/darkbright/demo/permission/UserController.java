@@ -44,7 +44,7 @@ public class UserController {
    * @return user
    */
   @GetMapping("/{userId}")
-  User get(@PathVariable("userId") int userId) {
+  User get(@PathVariable() int userId) {
     User user = new User("bright", "xxx");
     System.out.println("arrived.");
     //User user = userService.get(userId);

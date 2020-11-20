@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @ SpringBootConfiguration   表示Application作为配置文件存在<br/>
  * @ EnableAutoConfiguration   表示启用SpringBoot内置的自动配置功能<br/>
  * @ ComponentScan             扫描bean，路径为Application类所在package以及package下的子路径，在spring boot中bean都放置在该路径以及子路径下<br/>
+ * @author leo
  */
 @SpringBootApplication
 public class DemoApplication {

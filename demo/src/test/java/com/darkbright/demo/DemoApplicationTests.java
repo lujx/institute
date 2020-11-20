@@ -1,7 +1,7 @@
 package com.darkbright.demo;
 
 import com.darkbright.demo.domain.entity.User;
-import com.darkbright.demo.permission.dao.UserRepository;
+import com.darkbright.demo.permission.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    为这个mapper指定一个唯一的namespace,与dao(mapper)类进行映射。
+    namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的
+    例如namespace="com.darkbright.frameworks.dao.userMapper"就是com.darkbright.frameworks.dao(包名)+userDao
+-->
+<mapper namespace="com.darkbright.frameworks.dao.UserDao">
+    <!--
+        用resultType，必须返回该对象所有属性；
+        用resultMap，可以自定义返回的属性，还有设定默认值；
+    -->
+    <resultMap id="User" type="User">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="passwd" column="passwd" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="createTime" column="creat_time" jdbcType="DATE"/>
+        <result property="updateTime" column="update_time" jdbcType="DATE"/>
+        <result property="deleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <resultMap id="Role" type="Role">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="UserRole" type="UserRole">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="passwd" column="passwd" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <collection property="role" ofType="Role">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_User">
+        ${alias}.id, ${alias}.nickname, ${alias}.passwd, ${alias}.email
+    </sql>
+    <sql id="Base_UserInfo">
+        ${alias}.id, ${alias}.user_id, ${alias}.nickname
+    </sql>
+    <sql id="Base_Role">
+        ${alias}.id, ${alias}.name
+    </sql>
+    <!--
+    　　在select标签中编写查询的SQL语句， 设置select标签的id属性为getUser，id属性值必须是唯一的，不能够重复,
+    　　使用parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型
+    　　resultType="com.darkbright.frameworks.domain.entity.User"就表示将查询结果封装成一个User类的对象返回,User类就是user表所对应的实体类
+　　-->
+    <!-- 根据id查询得到一个user对象-->
+    <select id="getUser" resultType="User">
+        SELECT
+        <include refid="Base_User">
+            <property name="alias" value="u"/>
+        </include>
+        FROM user u
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据查询得到所有user对象-->
+    <select id="getUsers" resultType="User">
+        SELECT
+        <include refid="Base_User">
+            <property name="alias" value="u"/>
+        </include>
+        FROM user u
+    </select>
+
+    <!-- 一对一、多对一的关系示例 -->
+    <!-- 查询用户详细信息 -->
+    <select id="getUserDetail" resultType="UserDetail">
+        SELECT
+        <include refid="Base_User">
+            <property name="alias" value="u"/>
+        </include>
+        ,
+        <include refid="Base_UserInfo">
+            <property name="alias" value="ui"/>
+        </include>
+        FROM user u LEFT JOIN userinfo ui ON u.id = ui.u_id
+    </select>
+    <select id="getUserDetailByResultMap" resultMap="User">
+        SELECT
+        <include refid="Base_User">
+            <property name="alias" value="u"/>
+        </include>
+        ,
+        <include refid="Base_UserInfo">
+            <property name="alias" value="ui"/>
+        </include>
+        FROM user u LEFT JOIN userinfo ui ON u.id = ui.u_id
+    </select>
+
+    <!-- 一对多、多对多查询 -->
+    <!-- 一对多，查询用户的角色 -->
+    <select id="getUserRoleById" parameterType="Long" resultMap="UserRole">
+        SELECT
+        <include refid="Base_User">
+            <property name="alias" value="u"/>
+        </include>
+        ,
+        <include refid="Base_Role">
+            <property name="alias" value="r"/>
+        </include>
+        FROM user u INNER JOIN user_role ur ON u.id = ur.user_id
+        INNER JOIN role r ON ur.role_id = r.id
+        WHERE u.id=#{id}
+    </select>
+
+    <select id="getUserRole" resultMap="UserRole">
+        SELECT
+        <include refid="Base_User">
+            <property name="alias" value="u"/>
+        </include>
+        ,
+        <include refid="Base_Role">
+            <property name="alias" value="r"/>
+        </include>
+        FROM user u INNER JOIN user_role ur ON u.id = ur.user_id
+        INNER JOIN role r ON ur.role_id = r.id
+    </select>
+
+
+    <!-- 添加user对象 -->
+    <!-- 返回自动生成的主键 id -->
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (nickname, passwd)
+        VALUES (#{nickname}, #{passwd})
+    </insert>
+
+    <!--批量添加-->
+    <!-- 逐一插入，不成功不会整体回滚 -->
+    <insert id="addUserOneByOne" useGeneratedKeys="true" keyProperty="id">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO user (nickname, passwd)
+            VALUES (#{item.nickname}, #{item.passwd})
+        </foreach>
+    </insert>
+
+    <!-- 插入不成功整体回滚-->
+    <insert id="addUserBatch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (nickname, passwd)
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( VALUES (#{item.nickname}, #{item.passwd}))
+        </foreach>
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delUser">
+        DELETE FROM user
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 更新 -->
+    <update id="updateUser" parameterType="User">
+        UPDATE user
+        SET nickname = #{nickname}, passwd = #{passwd}
+        WHERE id = #{id}
+    </update>
+</mapper>
