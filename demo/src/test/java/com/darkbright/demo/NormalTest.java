@@ -18,7 +18,7 @@ public class NormalTest {
   private static final Logger log = LoggerFactory.getLogger(NormalTest.class);
 
 
-  public static void main(String[] args) throws JsonProcessingException {
+  private void obj2Json(){
     ArrayList<User> users = new ArrayList<>();
 
     User user1 = new User("bright1","xxx");
@@ -31,7 +31,22 @@ public class NormalTest {
     users.add(user4);
 
     ObjectMapper mapper = new ObjectMapper();
-    log.debug(mapper.writeValueAsString(users));
+    try {
+      log.info(mapper.writeValueAsString(users));
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+  }
 
+  private void stringUtilsTest(){
+    String url = "http://localhost:8080/resource/437ac745eb2d4356e0386291f7cfcc19/molecular_function/heatmap.html";
+
+    log.info("");
+
+  }
+
+  public static void main(String[] args) {
+    NormalTest normalTest = new NormalTest();
+    normalTest.obj2Json();
   }
 }
